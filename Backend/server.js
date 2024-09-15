@@ -9,14 +9,15 @@ import { connectDB } from './database/dbConnect.js';
 
 dotenv.config()
 
-app.use(cors({
-    Origin:process.env.FRONTEND_URI,
-    credentials:true,
-    methods:["PUT","GET","POST","PATCH","DELETE"]
-}))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+    origin:'http://localhost:5173',
+    methods:["PUT","GET","POST","PATCH","DELETE"],
+    credentials:true,
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/admin',adminRouter)
 

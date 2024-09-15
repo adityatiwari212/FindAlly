@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+const {Collection}=mongoose
 
 const UserSchema=mongoose.Schema({
     username:{
@@ -21,4 +22,6 @@ const UserSchema=mongoose.Schema({
     }
 })
 
-export const UserModel=mongoose.model('user',UserSchema) 
+
+export const UserModel=mongoose.model('MyAlly',UserSchema) 
+console.log(UserModel.collection.name);
