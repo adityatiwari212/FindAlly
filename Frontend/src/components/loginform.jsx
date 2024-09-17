@@ -1,13 +1,14 @@
 import React from "react";
 import axios from 'axios'
 import { BASE_URL } from "../store";
+import { useNavigate } from "react-router-dom";
 
 export function LoginForm({toggleSignup}){
+    const navigate=useNavigate()
     const url=BASE_URL
     const [credentials,setCredentials]=React.useState({username:"",password:""})
     const submmitForm=async(e)=>{
         e.preventDefault()
-        console.log(credentials);
         try {
             const response=await axios.post(`${url}/login`,credentials,{
                 headers:{
@@ -17,13 +18,15 @@ export function LoginForm({toggleSignup}){
             })
             const data=response.data
             alert(data.message)
+            console.log(data)
             localStorage.token=data.token
-            localStorage.user=data.user._id
+            localStorage.userId=data.user._id
+            localStorage.name=data.user.name
+            navigate('/userDashboard')
         } catch (error) {
             console.log(error);
             alert(error.response.data.message)
         }
-        // setCredentials({username:"",password:""})
     }
     return(
         <div className="h-auto w-1/2 p-3 shadow-lg rounded-2xl border-2 border-s-2 border-violet-400 flex justify-center items-center">

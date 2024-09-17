@@ -6,6 +6,7 @@ import 'colors'
 import userRouter from './routes/userRoutes.js'
 import adminRouter from './routes/adminRoutes.js'
 import { connectDB } from './database/dbConnect.js';
+import fileUpload from 'express-fileupload';
 
 dotenv.config()
 

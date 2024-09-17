@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-const {Collection}=mongoose
 
 const UserSchema=mongoose.Schema({
     username:{
@@ -19,9 +18,17 @@ const UserSchema=mongoose.Schema({
     password:{
         type:String,
         required:true,
+    },
+    url:String,
+    requests:{
+        default:0,
+        type:Number
+    },
+    friends:{
+        type:Number,
+        default:0
     }
 })
 
 
-export const UserModel=mongoose.model('MyAlly',UserSchema) 
-console.log(UserModel.collection.name);
+export const UserModel=mongoose.model('users',UserSchema) 
