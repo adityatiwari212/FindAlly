@@ -1,15 +1,11 @@
 import React, { useEffect } from "react";
 import { BASE_URL } from "../store";
 import axios from "axios";
-import {useNavigate} from 'react-router-dom'
 
-export function Dashboard({toggleDash}){
-    const navigate=useNavigate()
+export function Dashboard({toggleDash,id}){
     const url=BASE_URL
-    const id=localStorage.getItem('userId')
     const [user,setUser]=React.useState({name:"",username:"",friends:"",requests:"",email:""})
-    React.useEffect(()=>{ 
-        if(!id) navigate('/')   
+    React.useEffect(()=>{   
         const fetchData=async()=>{            
             try{
                 const response=await axios.get(`${url}/${id}`,{
@@ -36,11 +32,9 @@ export function Dashboard({toggleDash}){
                     {user.url?<img src={user.url} alt=""/>:<img src='user.png' alt=""/>}
                 </div>
                     <ul className="flex flex-col">
-                        <li className="font-semibold text-lg text-violet-600 mb-2">Friends : </li>
-                        <li className="font-semibold  text-lg text-violet-600 mb-2">Friend Requests : </li>
-                        <button className="border-2  border-violet-400 rounded-lg p-1">
-                        <li className="font-semibold  text-lg text-violet-600" onClick={()=>toggleDash(true)}>Update Credentials</li>
-                        </button>
+                        <li className="font-semibold text-lg text-violet-600 mb-2">Friends : {user.friends}</li>
+                        <li className="font-semibold  text-lg text-violet-600 mb-2">Friend Requests : {user.requests}</li>
+                        <li className="p-1 font-semibold text-lg text-white bg-violet-600 rounded-lg cursor-pointer" onClick={()=>toggleDash(true)}>Update Credentials</li>
                     </ul>
             </div>
         </div>

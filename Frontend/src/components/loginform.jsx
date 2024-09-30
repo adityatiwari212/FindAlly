@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useReducer } from "react";
 import axios from 'axios'
 import { BASE_URL } from "../store";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 export function LoginForm({toggleSignup}){
     const navigate=useNavigate()
     const url=BASE_URL
+    const user=useSelector((store)=>store.user)
+    const dispatch=useDispatch()
     const [credentials,setCredentials]=React.useState({username:"",password:""})
     const submmitForm=async(e)=>{
         e.preventDefault()
@@ -19,9 +22,11 @@ export function LoginForm({toggleSignup}){
             const data=response.data
             alert(data.message)
             console.log(data)
-            localStorage.token=data.token
-            localStorage.userId=data.user._id
-            localStorage.name=data.user.name
+
+            dispatch({type:"LOGIN",payload:{token:data.token,id:data.user._id}})
+            // localStorage.token=data.token
+            // localStorage.userId=data.user._id
+            // localStorage.name=data.user.name
             navigate('/userDashboard')
         } catch (error) {
             console.log(error);

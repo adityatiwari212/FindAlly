@@ -3,15 +3,13 @@ import { BASE_URL } from "../store";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom'
 
-export function UpdateDashboard({toggleDash}){
+export function UpdateDashboard({toggleDash,id}){
     const navigate=useNavigate()
     const url=BASE_URL
-    const id=localStorage.getItem('userId')
     const[image,setImage]=React.useState("")
     const[preview,setPreview]=React.useState("")
-    const [user,setUser]=React.useState({name:"",username:"",friends:"",requests:"",email:""})
+    const [user,setUser]=React.useState({name:"",username:"",friends:"",requests:"",email:"",dob:{day:"",month:"",year:""},url:""})
     React.useEffect(()=>{ 
-        if(!id) navigate('/')   
         const fetchData=async()=>{            
             try{
                 const response=await axios.get(`${url}/${id}`,{
@@ -26,6 +24,7 @@ export function UpdateDashboard({toggleDash}){
             }
         }
         fetchData();
+        setPreview(user.url)
     },[id])
     const handlePfp=(e)=>{
         const file=e.target.files[0]
@@ -65,7 +64,7 @@ export function UpdateDashboard({toggleDash}){
             <span className="w-full font-bold text-xl text-violet-600 flex justify-start">{user.name}'s Dashboard</span>
             <div className="flex items-center justify-evenly p-5">
                 <div className="w-1/4 mr-4 flex flex-col items-center justify-center">
-                    {preview?<img src={preview} alt=""/>:<img src='user.png' alt=""/>}
+                    <img src={preview} alt="" />
                     <label className="mt-4 border-2 border-violet-400 text-center rounded-lg font-semibold text-violet-600 p-2 cursor-pointer" htmlFor="fileInput" >Upload PFP</label>
                     <input id="fileInput" className="hidden border-violet-400" type="file" placeholder="Upload PFP" onChange={handlePfp}/>    
                 </div>

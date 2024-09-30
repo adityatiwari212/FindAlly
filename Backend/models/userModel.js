@@ -27,7 +27,14 @@ const UserSchema=mongoose.Schema({
     friends:{
         type:Number,
         default:0
-    }
+    },
+    dob:{
+        type:{
+            day:Number,
+            month:Number,
+            year:Number,
+        }
+    },
 })
 
 

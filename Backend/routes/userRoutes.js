@@ -1,5 +1,6 @@
 import express from 'express'
 import { createUser,loginUser,getOneUser,updateProfile } from '../controllers/userController.js'
+import { getAllUsers } from '../controllers/adminController.js'
 const router=express.Router()
 import fileUpload from 'express-fileupload'
 
@@ -9,5 +10,6 @@ router.route('/:id').get(getOneUser).put(fileUpload({
     useTempFiles: true,
     tempFileDir: 'C:/Windows/Temp'
 }),updateProfile)
+router.route('/').get(getAllUsers)
 
 export default router
