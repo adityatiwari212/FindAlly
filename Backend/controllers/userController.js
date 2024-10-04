@@ -110,7 +110,7 @@ export const updateProfile=async(req,res)=>{
                 success:false,
                 message:"Please enter credentials"
             }) 
-        let url="" 
+        let url=''
         if(req.files){
             const {image}=req.files
             console.log(image);
@@ -122,7 +122,8 @@ export const updateProfile=async(req,res)=>{
                 }) 
             url=await uploadOnCloud(image.tempFilePath)
         }
-        const updatedUser = await UserModel.findByIdAndUpdate(id,{name,email,username,url},{new:true})
+        const updation=url==''?{name,email,username}:{name,email,username,url}
+        const updatedUser = await UserModel.findByIdAndUpdate(id,updation,{new:true})
             return res.status(201).json({
                 success:true,
                 message:"User updated successfully",
