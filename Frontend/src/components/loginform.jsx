@@ -3,14 +3,14 @@ import axios from 'axios'
 import { BASE_URL } from "../store";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../redux/userSlice";
 
 export function LoginForm({toggleSignup}){
     const navigate=useNavigate()
     const url=BASE_URL
-    const user=useSelector((store)=>store.user)
     const dispatch=useDispatch()
     const [credentials,setCredentials]=React.useState({username:"",password:""})
-    const submmitForm=async(e)=>{
+    const submitForm=async(e)=>{
         e.preventDefault()
         try {
             const response=await axios.post(`${url}/login`,credentials,{
@@ -22,8 +22,10 @@ export function LoginForm({toggleSignup}){
             const data=response.data
             alert(data.message)
             console.log(data)
-
-            dispatch({type:"LOGIN",payload:{token:data.token,id:data.user._id}})
+            dispatch(userActions.login({
+                token:data.token,
+                info:data.user
+            }))
             // localStorage.token=data.token
             // localStorage.userId=data.user._id
             // localStorage.name=data.user.name
@@ -44,7 +46,7 @@ export function LoginForm({toggleSignup}){
                 <form className="h-1/2 mt-1 flex flex-col justify-evenly items-center ">
                     <input name="email" placeholder="Enter username" className="border-b-2 border-violet-400  w-3/4 focus:outline-none" type="text" onChange={(event)=>setCredentials({...credentials,username:event.target.value})}/>
                     <input name="password" placeholder="Enter Password" className="border-b-2 border-violet-400  w-3/4 focus:outline-none" type="password" onChange={(event)=>setCredentials({...credentials,password:event.target.value})}/>
-                    <button className="bg-violet-600 text-white text-semibold w-20 h-9 mt-2 rounded-xl" onClick={submmitForm}>Log In</button>
+                    <button className="bg-violet-600 text-white text-semibold w-20 h-9 mt-2 rounded-xl" onClick={submitForm}>Log In</button>
                 </form>
                 <div className="mt-2 flex items-center justify-end px-2">
                     <span className="text-center text-slate-500 font-bold text-sm px-1">Don't have an account?</span>

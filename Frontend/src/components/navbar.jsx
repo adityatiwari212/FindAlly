@@ -2,24 +2,22 @@ import React from "react";
 import {Heading} from '@chakra-ui/react'
 import { Link, useNavigate } from "react-router-dom";
 import { TiArrowSortedDown } from "react-icons/ti";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../redux/userSlice";
 
 export function Navbar(){
-    // const HandleLogout=()=>{
-    //     localStorage.removeItem('userId')
-    //     localStorage.removeItem('token')
-    //     localStorage.removeItem('user')
-    //     localStorage.removeItem('name')
-    // }
     const dispatch=useDispatch()
+    const {info}=useSelector((store)=>store.user)
+    console.log("info",info);
     return (
         <>
-            <nav className="bg-violet-800 h-16 p-3 mx-2 sticky top-2 flex justify-between items-center text-white rounded-3xl">
+            <nav className="bg-violet-800 h-16 p-3 mx-2 fixed top-2 flex justify-between items-center text-white rounded-3xl" style={{width:"90%"}}>
                 <Heading>FindAlly</Heading>
-                <ul className="flex w-1/2 md:w-1/3 lg:w-1/5 justify-between items-center">
-                    <li className="font-semibold cursor-pointer hover:text-slate-500 ">HOME</li>
-                    <li className="font-semibold cursor-pointer hover:text-slate-500">ABOUT</li>
-                    <li className="font-semibold cursor-pointer hover:text-slate-500">CONTACT</li>
+                <ul className="flex w-1/2 md:w-1/3 lg:w-1/5 justify-center items-center">
+                    <li className="font-semibold cursor-pointer mr-2 hover:text-slate-500 ">HOME</li>
+                    <li className="font-semibold cursor-pointer mr-2 hover:text-slate-500">ABOUT</li>
+                    <li className="font-semibold cursor-pointer mr-2 hover:text-slate-500">CONTACT</li>
+                    {info!={} && <Link to='/chats' className="font-semibold cursor-pointer hover:text-slate-500">CHAT</Link>}
                     <div className="dropdown cursor-pointer">
                         <div tabIndex={0} className="flex items-center m-1 font-semibold">
                             <span className="pr-1 hover:text-slate-500">CLICK</span>
@@ -52,7 +50,7 @@ export function Navbar(){
                             d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
                         </svg>
                 </label>
-                <Link to='/' className='bg-white hover:bg-gray-400 text-black p-2 rounded-lg  font-bold' onClick={()=>{dispatch({type:"LOGOUT"})}} >LOGOUT</Link>
+                <Link to='/' className='bg-white hover:bg-gray-400 text-black p-2 rounded-lg  font-bold' onClick={()=>{dispatch(userActions.login({token:'',info:{}}))}} >LOGOUT</Link>
                 </div>
             </nav>
         </>

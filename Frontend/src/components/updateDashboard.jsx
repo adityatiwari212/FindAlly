@@ -1,31 +1,16 @@
 import React, { useEffect } from "react";
 import { BASE_URL } from "../store";
 import axios from "axios";
-import {useNavigate} from 'react-router-dom'
+import { userActions } from "../../redux/userSlice";
+import { useDispatch } from "react-redux";
 
-export function UpdateDashboard({toggleDash,id}){
-    const navigate=useNavigate()
+export function UpdateDashboard({toggleDash,info}){
+    const dispatch=useDispatch()
     const url=BASE_URL
     const[image,setImage]=React.useState("")
-    const[preview,setPreview]=React.useState("")
-    const [user,setUser]=React.useState({name:"",username:"",friends:"",requests:"",email:"",dob:{day:"",month:"",year:""},url:""})
-    React.useEffect(()=>{ 
-        const fetchData=async()=>{            
-            try{
-                const response=await axios.get(`${url}/${id}`,{
-                    headers:{
-                        "content-type":"application/json"
-                    }
-                })
-                setUser(response.data.user)           
-            } catch (error) {
-                console.log(error);
-                alert(error.response.data.message)
-            }
-        }
-        fetchData();
-        setPreview(user.url)
-    },[id])
+    const[preview,setPreview]=React.useState(info.url)
+    const [user,setUser]=React.useState({name:info.name,username:info.username,friends:info.friends,requests:info.requests,email:info.email,url:info.url})
+
     const handlePfp=(e)=>{
         const file=e.target.files[0]
         const reader=new FileReader()
@@ -35,6 +20,7 @@ export function UpdateDashboard({toggleDash,id}){
         };
         reader.readAsDataURL(file);
     }
+
     const handleUpdate=async(e)=>{
         try {
             e.preventDefault()
@@ -43,17 +29,20 @@ export function UpdateDashboard({toggleDash,id}){
             form.append('name',user.name)
             form.append('username',user.username)
             form.append('image',image)
-            const response=await axios.put(`${url}/${id}`,form,{
+
+            const response=await axios.put(`${url}/${info._id}`,form,{
                 headers:{
                     "Content-Type":"multipart/form-data"
                 }
             })
+
             const data=response.data
-            console.log(data);
+            console.log(data.message);
             toggleDash(false)
+            dispatch(userActions.update(data.user))
         } catch (error) {
             console.log(error);
-            alert(error.response.data.message)
+            alert(error)
         }
     }
     let name=user.name

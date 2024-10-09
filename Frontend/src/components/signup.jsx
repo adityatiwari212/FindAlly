@@ -24,8 +24,8 @@ export function SignupForm({toggleSignup}){
         }
     }
     return(
-        <div className="w-1/2 p-3 shadow-lg rounded-2xl border-2 border-s-2 border-violet-400 flex justify-center items-center">
-            <div className="sm:hidden md:flex h-full w-1/2">
+        <div className="h-auto w-1/2 p-3 shadow-lg rounded-2xl border-2 border-s-2 border-violet-400 flex justify-center items-center">
+            <div className="flex h-full w-1/2">
                 <img className="h-full w-full obect-cover"  src="login.svg" alt="" />
             </div>
             <div className="h-full flex flex-col justify-center items-center">

@@ -1,27 +1,27 @@
-import {createStore} from "redux"
+import { userSlice } from "./userSlice";
+import {combineReducers, configureStore} from "@reduxjs/toolkit"
+import { version } from "react";
+import {persistReducer,persistStore} from "redux-persist"
+import storage from "redux-persist/lib/storage";
 
-const INITIAL_VAL={
-    counter:5,
-    user:{
-        id:"",
-        token:""
-    }
+
+const rootReducer=combineReducers({
+    user:userSlice.reducer
+})
+
+const persistConfig={
+    key:"root",
+    storage,
+    version:1
 }
 
-const counterReducer=(store=INITIAL_VAL,action)=>{
-    let newStore=store
-    if(action.type=="INCREMENT")
-        newStore.counter++
-    if(action.type=="LOGIN"){
-        newStore.user=action.payload
-        console.log('payload:',action.payload);
-    }
-    if(action.type=="LOGOUT")
-        newStore.user={}
-    console.log("Action : ",action.type);
-    return newStore
-}
+const persistedState=persistReducer(persistConfig,rootReducer)
 
-const counterStore=createStore(counterReducer)
+export const store=configureStore({
+    reducer:persistedState,
+    middleware:(getDefaultMiddleware)=> getDefaultMiddleware({
+        serializableCheck:false,
+    })
+})
 
-export default counterStore
+export const persistor= persistStore(store)
