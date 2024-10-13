@@ -6,7 +6,7 @@ export const getAllUsers=async(req,res)=>{
         res.status(201).json({
             success:true,
             users:users
-        })
+        }) 
     } catch (error) {
         console.log(error)
         return res.status(500).json({

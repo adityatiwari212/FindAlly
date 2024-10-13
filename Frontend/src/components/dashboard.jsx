@@ -4,7 +4,6 @@ import axios from "axios";
 
 export function Dashboard({toggleDash,info}){
     let name=info.name
-    console.log("info : ",info);
     
     name=name.split(' ')[0]
     name=name.charAt(0).toUpperCase()+name.slice(1)

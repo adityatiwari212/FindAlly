@@ -1,16 +1,18 @@
 import { userSlice } from "./userSlice";
 import {combineReducers, configureStore} from "@reduxjs/toolkit"
-import { version } from "react";
 import {persistReducer,persistStore} from "redux-persist"
-import storage from "redux-persist/lib/storage";
-
+import storage from "redux-persist/lib/storage/session";
+import { chatSlice } from "./chatSlice";
+import { UsersSlice } from "./usersSlice";
 
 const rootReducer=combineReducers({
-    user:userSlice.reducer
+    user:userSlice.reducer,
+    chat:chatSlice.reducer,
+    users:UsersSlice.reducer,
 })
 
 const persistConfig={
-    key:"root",
+    key:"newKey",
     storage,
     version:1
 }
@@ -20,7 +22,7 @@ const persistedState=persistReducer(persistConfig,rootReducer)
 export const store=configureStore({
     reducer:persistedState,
     middleware:(getDefaultMiddleware)=> getDefaultMiddleware({
-        serializableCheck:false,
+        serializableCheck:{ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],}
     })
 })
 

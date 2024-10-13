@@ -29,7 +29,7 @@ export function LoginForm({toggleSignup}){
             // localStorage.token=data.token
             // localStorage.userId=data.user._id
             // localStorage.name=data.user.name
-            navigate('/userDashboard')
+            navigate('/dashboard')
         } catch (error) {
             console.log(error);
             alert(error.response.data.message)

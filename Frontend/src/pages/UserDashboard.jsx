@@ -5,7 +5,8 @@ import { Card } from "../components/userCard";
 import axios from "axios";
 import { BASE_URL } from "../store";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { UsersActions } from "../../redux/usersSlice";
 import { Messages } from "../components/messaging";
 import Sidebar from "../components/sidebar";
 
@@ -14,13 +15,11 @@ export function UserDash(){
     const url=BASE_URL
     const [isUpdateDashboard,setIsUpdateDashboard]=React.useState(false)
     const [users,setUsers]=React.useState([])
-
-    const {info}=useSelector((store)=>store.user)
-    const id=info._id;
-    const username=info.username
+    const dispatch=useDispatch()
+    const {info}=useSelector((store)=>store.user)   
 
     useEffect(()=>{
-        // if(!id) navigate('/')
+        if(!info) navigate('/')
         const getAllUsers=async()=>{
             try {
                 const response=await axios.get(`${url}`,{
@@ -29,16 +28,16 @@ export function UserDash(){
                     }
                 })
                 const users=response.data.users
-                console.log(users)
                 setUsers(users)
+                dispatch(UsersActions.addUsers(users))
             } catch (error) {
                 console.log(error);
-                alert(error.response.data.message)
+                alert(error)
             }
         }
         getAllUsers()
-    },[info])
-
+    },[])
+    if(!info) return null
     return(
         <div className="flex mt-20 flex-col justify-center items-center max-w-screen">
             {isUpdateDashboard?<UpdateDashboard toggleDash={setIsUpdateDashboard} info={info}/>:<Dashboard toggleDash={setIsUpdateDashboard} info={info}/>}
@@ -47,7 +46,7 @@ export function UserDash(){
                 <div className="flex flex-wrap items-center justify-center mt-5">
                     {users.map((user,id)=>{
                         return <Card 
-                            key={user.id} 
+                            key={user._id} 
                             username={user.username} 
                             name={user.name} 
                             url={user.url} 
