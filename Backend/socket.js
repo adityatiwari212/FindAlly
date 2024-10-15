@@ -1,6 +1,7 @@
 import { Server } from "socket.io"
 import dotenv from 'dotenv'
 import { MessageModel } from "./models/messageModel.js"
+import { sendFileController } from "./controllers/chatControllers.js"
 dotenv.config()
 
 export const setupSocket=(server)=>{
@@ -24,24 +25,30 @@ export const setupSocket=(server)=>{
     }
 
     const sendMessage= async (message)=>{
-        console.log(message);
+        console.log("message : "+message);
+        let createdMessage
+
+        if(message.fileUrl){
+            const senderSocketId = userMap.get(message.sender._id)
+            const receiverSocketId=userMap.get(message.receiver._id)
+            console.log("emitting file from"+senderSocketId+"to "+receiverSocketId);        
+            if(receiverSocketId) io.to(receiverSocketId).emit("receiveMessage",message)
+            if(senderSocketId) io.to(senderSocketId).emit("receiveMessage",message)
+        }
+
+        else{
+            const newMessage = await MessageModel.create(message)
+            console.log("New message created : ",newMessage);
+            createdMessage = await MessageModel.findById(newMessage._id)
+                .populate("sender","username email url")
+                .populate("receiver","username email url")
         
         const senderSocketId = userMap.get(message.sender)
-        const receiverSocketId = userMap.get(message.receiver)
-        
-        const createdMessage = await MessageModel.create(message)
-
-        console.log("New message created : ",createdMessage);
-        
-        const  messageData = await MessageModel.findById(createdMessage._id)
-            .populate("sender","username email url")
-            .populate("receiver","username email url")
-        
+        const receiverSocketId=userMap.get(message.receiver)
         console.log("emitting message...");        
-
-        if(receiverSocketId) io.to(receiverSocketId).emit("receiveMessage",messageData)
-        if(senderSocketId) io.to(senderSocketId).emit("receiveMessage",messageData)
-    }
+        if(receiverSocketId) io.to(receiverSocketId).emit("receiveMessage",createdMessage)
+        if(senderSocketId) io.to(senderSocketId).emit("receiveMessage",createdMessage)
+    }}
 
     io.on("connection",(socket)=>{    
         const userid=socket.handshake.query.userid
@@ -57,8 +64,6 @@ export const setupSocket=(server)=>{
 
         //socket funcs
         socket.on("sendMessage",sendMessage)
-
-        
 
     })
 }

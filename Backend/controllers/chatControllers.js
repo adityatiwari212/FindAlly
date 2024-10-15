@@ -61,26 +61,44 @@ export const loadMessagesController=async(req,res)=>{
     }
 }
 
-export const sendFileController=async(req,res)=>{
+export const sendFileController = async (req, res) => {
     try {
-        const {sender,receiver}=req.body
-        const {file}=req.files
-        console.log(file);        
-        const url=uploadOnCloud(file.tempFilePath)
-        const message=await MessageModel.create({sender,receiver,fileUrl:url})
-        const populatedMessage=await MessageModel.findbyId(message._id)
-        .populate("sender","username email url")
-        .populate("receiver","username email url")
+        const { sender, messageType, receiver, chat } = req.body;
+        const { file } = req.files;
+        const receiverId=receiver==="null"?null:receiver
+        console.log(file);
+
+        const url = await uploadOnCloud(file.tempFilePath);
+        const messageData = {
+            chat,
+            sender,
+            fileUrl: url,
+            messageType
+        };
+
+        if (receiverId) {
+            messageData.receiver = receiverId;
+        }
+
+        const message = await MessageModel.create(messageData);
+
+        let populatedMessage = await MessageModel.findById(message._id)
+            .populate("sender", "username email url");
+
+        if (receiverId) {
+            populatedMessage = await populatedMessage.populate("receiver", "username email url");
+        }
+
         res.status(201).json({
-            success:true,
-            message:"File uploaded",
+            success: true,
+            message: "File uploaded",
             populatedMessage
-        })
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            success:false,
-            message:"Internal server error"
-        })  
+            success: false,
+            message: "Internal server error"
+        });
     }
-}
+};

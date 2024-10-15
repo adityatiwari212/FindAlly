@@ -3,7 +3,7 @@ import { createUser,loginUser,getOneUser,updateProfile } from '../controllers/us
 import { getAllUsers } from '../controllers/adminController.js'
 const router=express.Router()
 import fileUpload from 'express-fileupload'
-import { createChatController, loadChatsController, loadMessagesController } from '../controllers/chatControllers.js'
+import { createChatController, loadChatsController, loadMessagesController, sendFileController } from '../controllers/chatControllers.js'
 
 router.route('/signup').post(createUser)
 router.route('/login').post(loginUser)
@@ -17,4 +17,8 @@ router.route('/chats').post(createChatController)
 router.route('/chats/:id').get(loadChatsController)
 //messages
 router.route('/messages/:id').get(loadMessagesController)
+router.route('/messages/files').post(fileUpload({
+    useTempFiles: true,
+    tempFileDir: 'C:/Windows/Temp'
+}),sendFileController)
 export default router
