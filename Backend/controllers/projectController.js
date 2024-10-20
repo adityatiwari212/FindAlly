@@ -1,10 +1,10 @@
-import {Project} from "../models/project"
+import Project from "../models/project.js"
 
 // get project details and populate users
 export const getProjectDetail = async (req, res) => {
   try {
     const projectId = req.params.id;
-
+    
     const project = await Project.findById(projectId).populate('users');
 
     if (!project) {
@@ -100,3 +100,16 @@ export const createProject = async (req, res) => {
       return res.status(500).json({ message: 'Internal server error' });
     }
   };
+
+  export const getOpenProjects = async (req, res) => {
+    try {
+      const openProjects = await Project.find({ isApplicationOpen: true });
+      res.status(200).json(openProjects);
+    } catch (error) {
+      console.error('Error fetching open projects:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
+
+  

@@ -5,22 +5,26 @@ import {
   closeApplication,
   getProjectsByTechStack,
   getProjectsByCategory,
+  getOpenProjects
 } from '../controllers/projectController.js'; 
 
 const router = express.Router();
 
 
-router.route('/projects/:id')
+
+router.route('/create')
+.post(createProject);
+
+router.route('/techstack')
+.get(getProjectsByTechStack);
+
+router.route('/category')
+.get(getProjectsByCategory);
+
+router.route('/getOpenProjects').get(getOpenProjects);
+
+router.route('/:id')
   .get(getProjectDetail)
-  .patch('/close', closeApplication); // For closing the application
-
-router.route('/projects')
-  .post(createProject);
-
-router.route('/projects/techstack')
-  .get(getProjectsByTechStack);
-
-router.route('/projects/category')
-  .get(getProjectsByCategory);
+  .patch(closeApplication); // For closing the application **PS : Always keep this route at the end**
 
 export default router;

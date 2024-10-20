@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import 'colors'
 import userRouter from './routes/userRoutes.js'
 import adminRouter from './routes/adminRoutes.js'
+import projectRouter from './routes/projectRoutes.js';
 import { connectDB } from './database/dbConnect.js';
 import fileUpload from 'express-fileupload';
 import { Server } from 'socket.io';
@@ -24,7 +25,7 @@ app.use(cors({
 }))
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/admin',adminRouter)
-
+app.use('/api/v1/project' ,projectRouter);
 //Socket
 const server = createServer(app)
 // const io=new Server(server,{
